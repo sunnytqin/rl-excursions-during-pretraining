@@ -97,15 +97,15 @@
 		<link rel="preload" as="font" type="font/woff2" href="./_app/immutable/assets/KaTeX_Typewriter-Regular.CO6r4hn1.woff2" crossorigin>
 		<link rel="preload" as="font" type="font/woff" href="./_app/immutable/assets/KaTeX_Typewriter-Regular.C0xS9mPB.woff" crossorigin>
 		<link rel="preload" as="font" type="font/ttf" href="./_app/immutable/assets/KaTeX_Typewriter-Regular.D3Ib7_Hf.ttf" crossorigin>
-		<link rel="modulepreload" href="./_app/immutable/entry/start.atFnXHlp.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/entry.DzeObKKW.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.SfSgCAC_.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.CUilvDNA.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.Dz6rpRjC.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.BnG-D2WM.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.BqhI2Vck.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index.Bq3CIXiF.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.Q7OJ2UyN.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/stores.BdsXFoG_.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/2.B9fd8CYt.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/isoflops_noimg.Cc9J2HM1.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.DXMOK2co.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/stores.xKecfHDX.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.B2I-bcnl.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/isoflops_noimg.BuIFfjrs.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/each.CElwNa7f.js"><title>IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs</title><!-- HEAD_svelte-1r9of7h_START --><!-- HEAD_svelte-1r9of7h_END --><!-- HEAD_svelte-1u7ey3_START --><meta name="description" content="IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs (image URLs replaced with placeholders)."><meta property="og:title" content="IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs"><meta property="og:description" content="IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs (image URLs replaced with placeholders)."><!-- HEAD_svelte-1u7ey3_END -->
   </head>
   <body data-sveltekit-preload-data="hover">
@@ -115,7 +115,7 @@
       <br>
       __DATE__</p></div>  </header> <main> <div> <div class="scroll-meter svelte-lifq7d" aria-hidden="true"><div class="track svelte-lifq7d"><div class="gradient svelte-lifq7d" style=""></div> </div> </div> <div class="layout-md text-lg space-y-12"><div class="md-output space-y-6 svelte-2uty9x"><div class="md-output svelte-2uty9x"><!-- HTML_TAG_START --><p><img src="/assets/figures/teaser.gif" alt="" class="block mx-auto" /></p>
 <p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>Figure 1 [teaser, to prettify]: Compute-optimal allocation of parallel rollouts per problem (<i>n</i>).</b> We analyze how the optimal number of rollouts per problem (<i>n</i>) evolves with the total rollout sampling budget in RL with outcome rewards (GRPO). We find the compute-optimal <i>n</i> is not static, but increases as more sampling compute budget is provided <b><i>(left)</i></b>. We find this allocation can be represented via a sigmoid fit <i>(<b>right</b>)</i>.
+<b>[teaser figure on compute allocation across three dimensions, to prettify]
 </p>
 
 <p>A persistent blocker to scaling up reinforcement learning (RL) for LLMs is the absence of a <em><strong>concrete workflow</strong></em> : <strong>a recipe that tells practitioners <em>what</em> to scale in the RL, <em>how</em> to scale it, and <em>what outcomes of scaling one should expect</em>.</strong> In many areas of modern-day AI, such workflows emerge from <a href="https://arxiv.org/pdf/2001.08361" class="link" target="_blank" rel="external noopener noreferrer">empirical</a> <a href="https://arxiv.org/pdf/2203.15556" class="link" target="_blank" rel="external noopener noreferrer">scaling laws</a>: small-scale experiments reveal how performance should grow with compute, data, or model size. These laws inform compute allocation, models to use, and hyperparameter settings.</p>
@@ -477,7 +477,7 @@ Figure 1x: AIME 24 scores trained with varying parallel rollouts (<i>n</i>) unde
 			
 			<script>
 				{
-					__sveltekit_1nm1f7a = {
+					__sveltekit_6bf5jt = {
 						base: new URL(".", location).pathname.slice(0, -1)
 					};
 
@@ -486,8 +486,8 @@ Figure 1x: AIME 24 scores trained with varying parallel rollouts (<i>n</i>) unde
 					const data = [null,null];
 
 					Promise.all([
-						import("./_app/immutable/entry/start.atFnXHlp.js"),
-						import("./_app/immutable/entry/app.BnG-D2WM.js")
+						import("./_app/immutable/entry/start.SfSgCAC_.js"),
+						import("./_app/immutable/entry/app.BqhI2Vck.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2],

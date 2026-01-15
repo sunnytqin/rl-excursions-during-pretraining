@@ -1,7 +1,7 @@
 ![](/assets/figures/teaser.gif)
 
 <p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>Figure 1 [teaser, to prettify]: Compute-optimal allocation of parallel rollouts per problem (<i>n</i>).</b> We analyze how the optimal number of rollouts per problem (<i>n</i>) evolves with the total rollout sampling budget in RL with outcome rewards (GRPO). We find the compute-optimal <i>n</i> is not static, but increases as more sampling compute budget is provided <b><i>(left)</i></b>. We find this allocation can be represented via a sigmoid fit <i>(<b>right</b>)</i>.
+<b>[teaser figure on compute allocation across three dimensions, to prettify]
 </p>
 
 A persistent blocker to scaling up reinforcement learning (RL) for LLMs is the absence of a ***concrete workflow*** : **a recipe that tells practitioners *what* to scale in the RL, *how* to scale it, and *what outcomes of scaling one should expect*.** In many areas of modern-day AI, such workflows emerge from [empirical](https://arxiv.org/pdf/2001.08361) [scaling laws](https://arxiv.org/pdf/2203.15556): small-scale experiments reveal how performance should grow with compute, data, or model size. These laws inform compute allocation, models to use, and hyperparameter settings.
