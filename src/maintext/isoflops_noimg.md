@@ -17,8 +17,8 @@ We have been working toward answering these questions. This article aims to fram
 
 To begin, it helps to recall why scaling laws can be derived in supervised learning or pre-training, and what makes learning dynamics predictable in these settings. In supervised learning, the objective is typically cross entropy, which is smooth and optimized over a fixed data distribution. This results in relatively well-behaved optimization dynamics, where small parameter updates lead to small and predictable changes in the loss. Consequently, under well-chosen hyperparameters, which can often be identified through small-scale experiments, the training dynamics of supervised learning become predictable, allowing the loss to be modeled as a function of compute or data. The **statistical structure of the data**, such as the covariance spectrum, remains constant through training. A simple mental model is that the [decay of this spectrum](https://arxiv.org/abs/2102.06701) governs the power law scaling behavior observed in practice. We emphasize that this perspective is an approximation rather than a formal proof, but it provides useful intuition for why scaling laws emerge in supervised learning. In RL, the challenge of deriving any scaling law is two fold: 
 
-1. ***the objective given by the  expected reward (unlike cross-entropy) behaves non-smoothly across training iterations which make small perturbations to the parameters*,**
-2. ***the data distribution itself depends on the policy being optimized***. 
+1. ::blue[ ***the objective given by the  expected reward (unlike cross-entropy) behaves non-smoothly across training iterations which make small perturbations to the parameters*** ]::
+2. ::blue[ ***the data distribution itself depends on the policy being optimized.*** ]:: 
 
 When training LLMs with a binary 0/1 reward, we observe that the first challenge of non-smooth rewards is relatively mild, and that in some regimes it is indeed possible to predict the expected reward. However, we did also see in our early experiments that attempting to fit other performance metrics beyond reward (e.g., pass@k or worst@k) poses additional predictability challenges due to objective shift. For this reason, rather than fitting performance directly, we fit **compute-optimal hyperparameters** as a function of resources. 
 
@@ -92,15 +92,11 @@ The first factor that informs the health of an RL run is the composition of the 
 **A practical way to quantify this difficulty is to evaluate the base model’s performance on the problem set prior to training.** In this blog, we use the [Guru-Math](https://arxiv.org/abs/2506.14965) dataset for its sizable, carefully curated math problem collection with verified answers, which allows us to perform controlled sampling. We first measure the problem difficulty by *avg@16* (average accuracy over 16 trials obtained for a given problem) with the base model we use for RL training and then construct training problem sets by difficulty: 
 
 - ***Easy*** problem set: **avg@16 in [0.3, 0.6]** (6k samples), with a 300-sample in-domain validation set.
-- ***Hard*** problem set: **avg@16 in** **[0.0, 0.0625]** (5k samples), with a 300-sample in-domain validation set.
+- ***Hard*** problem set: **avg@16 in [0.0, 0.0625]** (5k samples), with a 300-sample in-domain validation set.
 
 ![Figure2](/assets/figures/sec2_data_dist.png "Figure 2: Distributions of problem difficulty for the Easy and Hard problem sets. Difficulty is quantified using avg@16, the average pass rate over 16 generations per problem."){width=500px}
 
-<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>
-</p>
-
-Beyond these primary Easy and Hard sets for our experiments, we also curate a **Heterogeneous** set (mixing easy and hard set in different proportions) and an **Extremely Hard** (pass@128 = 0) for extending our observations. We default to utilizing the recipe for the Hard set on these problem sets as well. We discuss results on this set later in this post (see the section titled “The Bigger Picture”).
+Beyond these primary Easy and Hard sets for our experiments, we also curate a **Heterogeneous** set (mixing easy and hard set in different proportions) and an **Extremely Hard** (pass@128 = 0) for extending our observations. We default to utilizing the recipe for the Hard set on these problem sets as well. We discuss results on this set later in this post (see the section titled "The Bigger Picture").
 
 ### Factor 2: Entropy Control
 
@@ -112,11 +108,7 @@ Even with zero-variance filtering applied, problems in which rare positives are 
 
 **Experiment setup.** We use Qwen2.5-7B-Instruct as the base model with a max output length of 8,192 tokens and employ the [GRPO](https://arxiv.org/abs/2402.03300) algorithm. We fix $B$<sub>problem</sub> = 256 and $n$ = 16. On both the Easy and Hard sets, we perform ablations over (1) the presence of KL and entropy regularization and (2) the application of the zero-variance filter, including variants where the filter is applied only to the KL and entropy loss terms.
 
-![Figure 3](/assets/figures/sec2_kl_ent_ablation.png "Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set. On the Easy set, all configurations improve steadily, with standard “KL+entropy” achieving the highest reward (left). On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training (right)."){width=900px}
-
-<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>
-</p>
+![Figure 3](/assets/figures/sec2_kl_ent_ablation.png "Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set. On the Easy set, all configurations improve steadily, with standard "KL+entropy" achieving the highest reward (left). On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training (right)."){width=900px}
 
 ### Factor 3: Learning-Rate Scaling
 

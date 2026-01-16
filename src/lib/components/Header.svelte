@@ -24,8 +24,8 @@
   data-sveltekit-preload-code="eager"
 >
   <div class="mb-8">
-    <h1 class="font-bold text-black text-3xl mb-4">
-      IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs
+    <h1 class="title-font font-bold text-black text-3xl mb-4">
+      IsoCompute Playbook: Optimally Scaling Sampling Computes for RL Training of LLMs
     </h1>
     <p class="text-black text-lg">
       __AUTHORS__
@@ -51,6 +51,10 @@
 <style lang="postcss">
   nav {
     @apply flex items-start text-neutral-500 justify-end space-x-6 text-lg py-0.5;
+  }
+
+  .title-font {
+    font-family: "Iowan Old Style BT", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
   }
 
   .page-title {

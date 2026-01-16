@@ -7,8 +7,8 @@
 </script>
 
 <Seo
-  title="IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs"
-  description="IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs (image URLs replaced with placeholders)."
+  title="IsoCompute Playbook: Optimally Scaling Sampling Computes for RL Training of LLMs"
+  description="IsoCompute Playbook: Optimally Scaling Sampling Computes for RL Training of LLMs (image URLs replaced with placeholders)."
 />
 
 <div>

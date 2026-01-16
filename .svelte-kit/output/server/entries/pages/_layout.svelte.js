@@ -1,7 +1,7 @@
 import { c as create_ssr_component, b as subscribe, v as validate_component } from "../../chunks/ssr.js";
 import { p as page } from "../../chunks/stores.js";
 const css = {
-  code: "@media(max-width: 580px){}@media(max-width: 420px){}",
+  code: '.title-font.svelte-4ybk04{font-family:"Iowan Old Style BT", "Iowan Old Style", "Palatino Linotype", Palatino, serif}@media(max-width: 580px){}@media(max-width: 420px){}',
   map: null
 };
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -21,7 +21,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   }
   $$unsubscribe_page();
-  return `<header class="layout-md justify-between items-start" data-sveltekit-noscroll data-sveltekit-preload-code="eager" data-svelte-h="svelte-17v4y9h"><div class="mb-8"><h1 class="font-bold text-black text-3xl mb-4">IsoFLOPs Playbook: Workflows for Scaling Sampling FLOPs for RL Training of LLMs</h1> <p class="text-black text-lg">__AUTHORS__
+  return `<header class="layout-md justify-between items-start" data-sveltekit-noscroll data-sveltekit-preload-code="eager" data-svelte-h="svelte-1ymmwoe"><div class="mb-8"><h1 class="title-font font-bold text-black text-3xl mb-4 svelte-4ybk04">IsoCompute Playbook: Optimally Scaling Sampling Computes for RL Training of LLMs</h1> <p class="text-black text-lg">__AUTHORS__
       <br>
       __AFFILIATIONS__
       <br>

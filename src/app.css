@@ -50,11 +50,12 @@ html {
 body {
   @apply /* antialiased */
   py-12 sm:py-24 md:py-32 text-neutral-700;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Iowan Old Style BT", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  line-height: 1.7;
 }
 
 .font-serif {
-  font-family: "Newsreader Italics", serif;
+  font-family: "Iowan Old Style BT", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
 }
 
 ::selection {

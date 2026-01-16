@@ -259,6 +259,41 @@ const mathInline = {
   },
   renderer: (token) => `<span class="math math-inline">${renderMath(token.text, false)}</span>`
 };
+const colorText = {
+  name: "colorText",
+  level: "inline",
+  start: (src) => {
+    var _a;
+    return (_a = src.match(/::/)) === null || _a === void 0 ? void 0 : _a.index;
+  },
+  tokenizer(src) {
+    const match = /^::(gray|brown|orange|yellow|green|blue|purple|pink|red)\[([^\]]+?)\]::/.exec(src);
+    if (match) {
+      return {
+        type: "colorText",
+        raw: match[0],
+        color: match[1],
+        text: match[2]
+      };
+    }
+  },
+  renderer: (token) => {
+    const colors = {
+      gray: "#9B9A97",
+      brown: "#64473A",
+      orange: "#D9730D",
+      yellow: "#DFAB01",
+      green: "#0F7B6C",
+      blue: "#0B6E99",
+      purple: "#6940A5",
+      pink: "#AD1A72",
+      red: "#E03E3D"
+    };
+    const color = colors[token.color] || colors.gray;
+    const innerHtml = marked.parseInline(token.text);
+    return `<span style="color: ${color};">${innerHtml}</span>`;
+  }
+};
 const customRenderer = {
   link(href, title2, text2) {
     const isInternal = /^(\/|#|[A-Za-z0-9\-_]+(\.html?)?$)/.test(href);
@@ -363,7 +398,7 @@ const imageAttrExtension = {
 };
 marked.use({
   gfm: true,
-  extensions: [imageAttrExtension, mathBlock, mathInline],
+  extensions: [imageAttrExtension, mathBlock, mathInline, colorText],
   renderer: customRenderer
 });
 const JUMP_RE = /:::jumpbox\s+id="([^"]+)"(?:\s+label="([^"]+)")?\s*:::/gm;
@@ -665,12 +700,13 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   })} </div>`;
 });
 const css = {
-  code: ":root{--meter-width:14px;--tick-length:22px;--tick-length-sub:18px;--tick-hitbox:18px;--tick-line:2px;--tick-color:#9ca3af;--tick-color-sub:#c5cbd3;--tick-color-active:#111827}.scroll-meter.svelte-lifq7d{position:fixed;left:0;top:0;bottom:0;width:var(--meter-width);pointer-events:none;z-index:50;opacity:0;transition:opacity 1000ms ease}.scroll-meter.ready.svelte-lifq7d{opacity:1}.track.svelte-lifq7d{position:absolute;inset:0;background:white;overflow:visible}.gradient.svelte-lifq7d{position:absolute;inset:0;background:linear-gradient(180deg, #77aabb 0%, #bbcc33 100%);will-change:clip-path}.tick.svelte-lifq7d{position:absolute;left:0;width:var(--tick-length);height:var(--tick-hitbox);background:transparent;transform:translateY(-1px);pointer-events:auto;text-decoration:none;z-index:2;display:block;opacity:0.9;transition:opacity 120ms ease}.tick.svelte-lifq7d::before{content:'';position:absolute;left:0;width:var(--tick-length);height:var(--tick-line);top:50%;transform:translateY(-50%);background:#595959}.tick.svelte-lifq7d::before::hover{background:neutral-900}.tick.svelte-lifq7d:hover{opacity:1}@media(max-width: 1439px){.tick.svelte-lifq7d::after{display:none !important}}.tick.sub.svelte-lifq7d::before{width:calc(var(--tick-length-sub));background:#868686}.tick.sub.svelte-lifq7d::before::hover{background:neutral-900}.tick.svelte-lifq7d::after{content:attr(data-label);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);width:var(--meter-gutter, 220px);white-space:normal;overflow-wrap:anywhere;font-size:18px;line-height:1.2;color:#374151;padding:2px 6px;opacity:0;pointer-events:none;transition:opacity 120ms ease}.tick.svelte-lifq7d:hover::after{opacity:1}@media(max-width: 1024px){.scroll-meter.svelte-lifq7d{display:none}}",
+  code: ":root{--toc-max-width:280px}.toc.svelte-7oalz7.svelte-7oalz7{position:fixed;left:28px;top:120px;width:var(--toc-max-width, 280px);max-height:calc(100vh - 160px);overflow:auto;padding-right:8px;z-index:50;opacity:0;transition:opacity 400ms ease}.toc.ready.svelte-7oalz7.svelte-7oalz7{opacity:1}.toc-item.svelte-7oalz7.svelte-7oalz7{display:block;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-7oalz7.svelte-7oalz7:hover{color:#111827}.toc-item.active.svelte-7oalz7.svelte-7oalz7{color:#111827;font-weight:600}.toc.in-body.svelte-7oalz7 .toc-item.active.svelte-7oalz7{color:#6b7280}.toc.in-body.svelte-7oalz7 .toc-item.active.sub.svelte-7oalz7{color:#9ca3af}.toc-item.sub.svelte-7oalz7.svelte-7oalz7{margin-left:14px;color:#9ca3af;font-size:13px}.toc-item.hidden.svelte-7oalz7.svelte-7oalz7{visibility:hidden;pointer-events:none}@media(max-width: 1024px){.toc.svelte-7oalz7.svelte-7oalz7{display:none}}",
   map: null
 };
 const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { containerSelector = ".md-output" } = $$props;
   let { headingsSelector = "h2, h3" } = $$props;
+  let meterEl = null;
   onDestroy(() => {
   });
   if ($$props.containerSelector === void 0 && $$bindings.containerSelector && containerSelector !== void 0)
@@ -678,11 +714,10 @@ const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) 
   if ($$props.headingsSelector === void 0 && $$bindings.headingsSelector && headingsSelector !== void 0)
     $$bindings.headingsSelector(headingsSelector);
   $$result.css.add(css);
-  return ` <div class="${["scroll-meter svelte-lifq7d", ""].join(" ").trim()}" aria-hidden="true"><div class="track svelte-lifq7d"><div class="gradient svelte-lifq7d"${add_attribute(
-    "style",
-    "",
-    0
-  )}></div> ${``}</div> </div>`;
+  return ` <nav class="${[
+    "toc svelte-7oalz7",
+    " "
+  ].join(" ").trim()}" aria-hidden="true"${add_attribute("this", meterEl, 0)}>${``} </nav>`;
 });
 const text = `![teaser](/assets/figures/teaser.gif "Figure 1: We study the compute-optimal RL for LLM along three axis: #parallel rollouts($n$), #problems per batch($B_\\text{problem}$), and #sequential iterations($M$), where total rollout compute $C = n \\times B_\\text{problem} \\times M$. We find that (1) optimal parallel rollouts per problem ($n$) grows with  compute budget ($C$). (2) Easy and hard problems: similar scaling trends, but different mechanisms. (3) under fixed hardware constraints ($B$ = $B$<sub>problem</sub> × $n$), prioritize **large $B$<sub>problem</sub>** (small $n$) at low compute budgets, but shift to **large $n$** (small $B$<sub>problem</sub>) at high compute budgets to maximize performance (3) #problems per batch ($B$<sub>problem</sub>) has marginal impact on performance when kept in a moderate range."){width=900px}
 
@@ -703,8 +738,8 @@ We have been working toward answering these questions. This article aims to fram
 
 To begin, it helps to recall why scaling laws can be derived in supervised learning or pre-training, and what makes learning dynamics predictable in these settings. In supervised learning, the objective is typically cross entropy, which is smooth and optimized over a fixed data distribution. This results in relatively well-behaved optimization dynamics, where small parameter updates lead to small and predictable changes in the loss. Consequently, under well-chosen hyperparameters, which can often be identified through small-scale experiments, the training dynamics of supervised learning become predictable, allowing the loss to be modeled as a function of compute or data. The **statistical structure of the data**, such as the covariance spectrum, remains constant through training. A simple mental model is that the [decay of this spectrum](https://arxiv.org/abs/2102.06701) governs the power law scaling behavior observed in practice. We emphasize that this perspective is an approximation rather than a formal proof, but it provides useful intuition for why scaling laws emerge in supervised learning. In RL, the challenge of deriving any scaling law is two fold: 
 
-1. ***the objective given by the  expected reward (unlike cross-entropy) behaves non-smoothly across training iterations which make small perturbations to the parameters*,**
-2. ***the data distribution itself depends on the policy being optimized***. 
+1. ::blue[ ***the objective given by the  expected reward (unlike cross-entropy) behaves non-smoothly across training iterations which make small perturbations to the parameters*** ]::
+2. ::blue[ ***the data distribution itself depends on the policy being optimized.*** ]:: 
 
 When training LLMs with a binary 0/1 reward, we observe that the first challenge of non-smooth rewards is relatively mild, and that in some regimes it is indeed possible to predict the expected reward. However, we did also see in our early experiments that attempting to fit other performance metrics beyond reward (e.g., pass@k or worst@k) poses additional predictability challenges due to objective shift. For this reason, rather than fitting performance directly, we fit **compute-optimal hyperparameters** as a function of resources. 
 
@@ -778,15 +813,11 @@ The first factor that informs the health of an RL run is the composition of the 
 **A practical way to quantify this difficulty is to evaluate the base model’s performance on the problem set prior to training.** In this blog, we use the [Guru-Math](https://arxiv.org/abs/2506.14965) dataset for its sizable, carefully curated math problem collection with verified answers, which allows us to perform controlled sampling. We first measure the problem difficulty by *avg@16* (average accuracy over 16 trials obtained for a given problem) with the base model we use for RL training and then construct training problem sets by difficulty: 
 
 - ***Easy*** problem set: **avg@16 in [0.3, 0.6]** (6k samples), with a 300-sample in-domain validation set.
-- ***Hard*** problem set: **avg@16 in** **[0.0, 0.0625]** (5k samples), with a 300-sample in-domain validation set.
+- ***Hard*** problem set: **avg@16 in [0.0, 0.0625]** (5k samples), with a 300-sample in-domain validation set.
 
 ![Figure2](/assets/figures/sec2_data_dist.png "Figure 2: Distributions of problem difficulty for the Easy and Hard problem sets. Difficulty is quantified using avg@16, the average pass rate over 16 generations per problem."){width=500px}
 
-<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>
-</p>
-
-Beyond these primary Easy and Hard sets for our experiments, we also curate a **Heterogeneous** set (mixing easy and hard set in different proportions) and an **Extremely Hard** (pass@128 = 0) for extending our observations. We default to utilizing the recipe for the Hard set on these problem sets as well. We discuss results on this set later in this post (see the section titled “The Bigger Picture”).
+Beyond these primary Easy and Hard sets for our experiments, we also curate a **Heterogeneous** set (mixing easy and hard set in different proportions) and an **Extremely Hard** (pass@128 = 0) for extending our observations. We default to utilizing the recipe for the Hard set on these problem sets as well. We discuss results on this set later in this post (see the section titled "The Bigger Picture").
 
 ### Factor 2: Entropy Control
 
@@ -798,11 +829,7 @@ Even with zero-variance filtering applied, problems in which rare positives are 
 
 **Experiment setup.** We use Qwen2.5-7B-Instruct as the base model with a max output length of 8,192 tokens and employ the [GRPO](https://arxiv.org/abs/2402.03300) algorithm. We fix $B$<sub>problem</sub> = 256 and $n$ = 16. On both the Easy and Hard sets, we perform ablations over (1) the presence of KL and entropy regularization and (2) the application of the zero-variance filter, including variants where the filter is applied only to the KL and entropy loss terms.
 
-![Figure 3](/assets/figures/sec2_kl_ent_ablation.png "Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set. On the Easy set, all configurations improve steadily, with standard “KL+entropy” achieving the highest reward (left). On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training (right)."){width=900px}
-
-<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>
-</p>
+![Figure 3](/assets/figures/sec2_kl_ent_ablation.png "Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set. On the Easy set, all configurations improve steadily, with standard "KL+entropy" achieving the highest reward (left). On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training (right)."){width=900px}
 
 ### Factor 3: Learning-Rate Scaling
 

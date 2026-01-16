@@ -38,6 +38,42 @@
       `<span class="math math-inline">${renderMath(token.text, false)}</span>`,
   };
 
+  // Notion color text extension: ::color[text]::
+  const colorText = {
+    name: "colorText",
+    level: "inline",
+    start: (src: string) => src.match(/::/)?.index,
+    tokenizer(src: string) {
+      const match = /^::(gray|brown|orange|yellow|green|blue|purple|pink|red)\[([^\]]+?)\]::/.exec(src);
+      if (match) {
+        return { 
+          type: "colorText", 
+          raw: match[0], 
+          color: match[1],
+          text: match[2]
+        };
+      }
+    },
+    renderer: (token: any) => {
+      // Notion's default text colors
+      const colors: Record<string, string> = {
+        gray: "#9B9A97",
+        brown: "#64473A",
+        orange: "#D9730D",
+        yellow: "#DFAB01",
+        green: "#0F7B6C",
+        blue: "#0B6E99",
+        purple: "#6940A5",
+        pink: "#AD1A72",
+        red: "#E03E3D",
+      };
+      const color = colors[token.color] || colors.gray;
+      // Parse inner Markdown (bold, italic, etc.)
+      const innerHtml = marked.parseInline(token.text);
+      return `<span style="color: ${color};">${innerHtml}</span>`;
+    },
+  };
+
   const customRenderer = {
     link(href: string, title: string | null, text: string) {
       const isInternal = /^(\/|#|[A-Za-z0-9\-_]+(\.html?)?$)/.test(href);
@@ -167,7 +203,7 @@
 
   marked.use({
     gfm: true,
-    extensions: [imageAttrExtension, mathBlock, mathInline],
+    extensions: [imageAttrExtension, mathBlock, mathInline, colorText],
     renderer: customRenderer,
   });
 </script>
