@@ -241,6 +241,8 @@
         children: RenderChunk[];
       };
 
+  type CalloutChunk = Extract<RenderChunk, { type: "callout" }>;
+
   type SectionItem =
     | { type: "chunk"; chunk: RenderChunk }
     | {
@@ -607,6 +609,12 @@
       | null = null;
 
     for (const ch of children) {
+      if (isPinnedTakeaway(ch)) {
+        if (current) out.push({ type: "subsection", ...current });
+        current = null;
+        out.push({ type: "chunk", chunk: ch });
+        continue;
+      }
       if (ch.type === "h3") {
         if (current) out.push({ type: "subsection", ...current });
         const inline = marked.parseInline(ch.text, { smartypants: true } as any) as any as string;
@@ -625,6 +633,15 @@
 
     if (current) out.push({ type: "subsection", ...current });
     return out;
+  }
+
+  function isPinnedTakeaway(chunk: RenderChunk): chunk is CalloutChunk {
+    if (chunk.type !== "callout") return false;
+    if (chunk.variant === "takeaway") return true;
+    if ((chunk.title || "").toLowerCase().includes("takeaway")) return true;
+    // Fallback: detect a bold "Takeaways" heading in the content body.
+    const head = (chunk.content || "").slice(0, 200).toLowerCase();
+    return /^\s*\*\*.*takeaway/.test(head);
   }
 
   import { onMount, afterUpdate, onDestroy } from "svelte";
@@ -922,10 +939,7 @@
 
   onMount(() => {
     if (container) {
-      // Ensure all h2 folds start closed
-      container.querySelectorAll<HTMLDetailsElement>("details[data-h2fold]").forEach((d) => {
-        d.open = false;
-      });
+      // Respect default open/closed state set in the markup.
       openFoldForCurrentHash();
       setupVideos(container);
       makeCodeBlocksCopyable(container);
@@ -1036,7 +1050,7 @@
             <FoldBox title={item.chunk.title} open={item.chunk.open} html={toHtml(item.chunk.content)} />
           {/if}
         {:else if item.type === "section"}
-          <details class="foldbox foldbox--h2" data-h2fold="1">
+          <details class="foldbox foldbox--h2" data-h2fold="1" open>
             <summary
               class="foldbox__summary foldbox__summary--h2"
               on:click={(e) => {
@@ -1066,7 +1080,15 @@
             <div class="foldbox__body foldbox__body--h2">
               {#each buildH3Sections(item.children) as sub, j (j)}
                 {#if sub.type === "chunk"}
-                  {#if sub.chunk.type === "text"}
+                  {#if sub.chunk.type === "callout" && isPinnedTakeaway(sub.chunk)}
+                    <div class="foldbox__pin">
+                      <CalloutBox
+                        variant={sub.chunk.variant}
+                        title={sub.chunk.title}
+                        html={toHtml(sub.chunk.content)}
+                      />
+                    </div>
+                  {:else if sub.chunk.type === "text"}
                     <div class="md-output">{@html toHtml(sub.chunk.content)}</div>
                   {:else if sub.chunk.type === "jumpbox"}
                     <Jumpbox id={sub.chunk.id} />
@@ -1121,7 +1143,15 @@
                     </summary>
                     <div class="foldbox__body foldbox__body--h3">
                       {#each sub.children as chunk, k (k)}
-                        {#if chunk.type === "text"}
+                        {#if chunk.type === "callout" && isPinnedTakeaway(chunk)}
+                          <div class="foldbox__pin">
+                            <CalloutBox
+                              variant={chunk.variant}
+                              title={chunk.title}
+                              html={toHtml(chunk.content)}
+                            />
+                          </div>
+                        {:else if chunk.type === "text"}
                           <div class="md-output">{@html toHtml(chunk.content)}</div>
                         {:else if chunk.type === "jumpbox"}
                           <Jumpbox id={chunk.id} />
@@ -1295,6 +1325,11 @@
   :global(details.foldbox.foldbox--h3 .foldbox__h3 h3),
   :global(details.foldbox.foldbox--h3 .foldbox__h3 h3 *) {
     pointer-events: none;
+  }
+
+  /* Keep pinned takeaways visible even when the fold is closed */
+  :global(details.foldbox > .foldbox__body .foldbox__pin) {
+    display: block;
   }
 
   :global(details.foldbox.foldbox--h3 > summary .foldbox__caret) {
