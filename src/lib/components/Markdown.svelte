@@ -102,12 +102,13 @@
       if (!href || href === '__IMAGE_PLACEHOLDER__' || href.trim() === '') {
         if (text) {
           // Render caption only if alt text exists
-          return `<div class="text-center text-gray-400 italic text-sm my-4">[Image: ${text}]</div>`;
+          return `<div class="text-left text-gray-400 italic text-sm my-4">[Image: ${text}]</div>`;
         }
         return '<!-- image placeholder -->';
       }
       // Normal image rendering
-      let out = `<img src="${href}" alt="${text || ''}" class="block mx-auto" `;
+      const id = text ? `fig-${slugify(text)}` : "";
+      let out = `<img src="${href}" alt="${text || ''}" ${id ? `id="${id}" ` : ""}class="block mx-auto" `;
       if (title) out += `title="${title}" `;
       out += '/>';
       return out;
@@ -164,7 +165,8 @@
         // read optional freeze ms from markdown: {... freeze=10000}
         const freezeMs = token.attrs["freeze"] || "10000";
 
-        out += `<video class="block mx-auto autoplay-on-fullview md-video unselectable" aria-label="${token.alt || ""}" id="fig-${slugify(token.alt || "")}"`;
+        const figId = token.attrs["id"] || `fig-${slugify(token.alt || "")}`;
+        out += `<video class="block mx-auto autoplay-on-fullview md-video unselectable" aria-label="${token.alt || ""}" id="${figId}"`;
         const hasPlaysinline = Object.prototype.hasOwnProperty.call(
           token.attrs,
           "playsinline",
@@ -177,7 +179,8 @@
             k === "video" ||
             k === "source-type" ||
             k === "freeze" ||
-            k === "controls"
+            k === "controls" ||
+            k === "id"
           )
             continue;
           const val = token.attrs[k];
@@ -193,14 +196,18 @@
 
         out += `><source src="${token.src}#t=0.1" type="${sourceType}" /></video>`;
       } else {
-        out += `<img src="${token.src}" alt="${token.alt}" id="fig-${slugify(token.alt)}" class="block mx-auto unselectable"`;
+        const figId = token.attrs["id"] || `fig-${slugify(token.alt)}`;
+        out += `<img src="${token.src}" alt="${token.alt}" id="${figId}" class="block mx-auto unselectable"`;
         for (const k in token.attrs) {
+          if (k === "id") continue;
           out += ` ${k}="${token.attrs[k]}"`;
         }
         out += " />";
       }
       if (token.title) {
-        out += `<div class='text-center text-gray-500 mb-4 md:px-8 lg:px-12 text-sm'>${marked.parse(token.title, { smartypants: true })}</div>`;
+        const m = /\bFigure\s+(\d+)\b/i.exec(String(token.title || ""));
+        const figNumAttr = m ? ` data-fig-num="${m[1]}"` : "";
+        out += `<div class='md-figcaption text-left text-gray-500 mb-4 md:px-8 lg:px-12 text-sm'${figNumAttr}>${marked.parse(token.title, { smartypants: true })}</div>`;
       }
       return out;
     },
@@ -923,6 +930,70 @@
     }
   }
 
+  function setupFigureRefLinks(root: HTMLElement) {
+    if (typeof document === "undefined") return;
+
+    // Build Figure number -> target id map from captions.
+    const figNumToId = new Map<string, string>();
+    const captions = Array.from(root.querySelectorAll<HTMLElement>(".md-figcaption[data-fig-num]"));
+    for (const cap of captions) {
+      const num = cap.dataset.figNum;
+      if (!num) continue;
+      const prev = cap.previousElementSibling as HTMLElement | null;
+      const id = prev?.id;
+      if (id) figNumToId.set(num, id);
+    }
+    if (!figNumToId.size) return;
+
+    const shouldSkip = (el: Element | null) => {
+      if (!el) return true;
+      // Skip inside anchors / code blocks / captions themselves.
+      return Boolean(el.closest("a, code, pre, script, style, .md-figcaption"));
+    };
+
+    // Linkify plain-text "Figure N" / "Fig N" / "Fig. N" in text nodes.
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const text = node.nodeValue || "";
+        if (!text || !/\b(Figure|Fig\.?)\s+\d+\b/.test(text)) return NodeFilter.FILTER_REJECT;
+        const parent = (node as Text).parentElement;
+        if (shouldSkip(parent)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    } as any);
+
+    const toProcess: Text[] = [];
+    while (walker.nextNode()) toProcess.push(walker.currentNode as Text);
+
+    const re = /\b(Figure|Fig\.?)\s+(\d+)\b/g;
+    for (const node of toProcess) {
+      const s = node.nodeValue || "";
+      re.lastIndex = 0;
+      let m: RegExpExecArray | null;
+      let last = 0;
+      const frag = document.createDocumentFragment();
+
+      while ((m = re.exec(s)) !== null) {
+        const match = m[0];
+        const num = m[2];
+        const targetId = figNumToId.get(num);
+        if (!targetId) continue;
+
+        if (m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+        const a = document.createElement("a");
+        a.href = `#${targetId}`;
+        a.className = "link figref";
+        a.textContent = match;
+        frag.appendChild(a);
+        last = m.index + match.length;
+      }
+
+      if (last === 0) continue; // no replacements
+      if (last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+      node.parentNode?.replaceChild(frag, node);
+    }
+  }
+
   function openFoldForCurrentHash() {
     if (typeof window === "undefined" || !container) return;
     const raw = window.location.hash || "";
@@ -943,6 +1014,7 @@
       openFoldForCurrentHash();
       setupVideos(container);
       makeCodeBlocksCopyable(container);
+      setupFigureRefLinks(container);
       updateSideVisibility();
       scheduleAlign();
       // Recompute once after layout settles (grid, fonts, etc.)
@@ -1000,6 +1072,7 @@
       openFoldForCurrentHash();
       setupVideos(container); // handle markdown re-render
       makeCodeBlocksCopyable(container);
+      setupFigureRefLinks(container);
       updateSideVisibility();
       scheduleAlign();
     }
@@ -1193,6 +1266,11 @@
 </div>
 
 <style lang="postcss">
+  /* Nicer anchor landings for figures when navigating via hash/links. */
+  :global(.md-output [id^="fig-"]) {
+    scroll-margin-top: 120px;
+  }
+
   :global(.md-output h1) {
     @apply text-3xl font-bold mt-6 mb-4;
   }
@@ -1395,7 +1473,7 @@
     width: 260px;
     justify-self: start;
     padding-left: calc(var(--footnote-gap, 48px) - var(--toc-gap, var(--side-gap, 32px)));
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.6;
     color: #6b7280;
   }

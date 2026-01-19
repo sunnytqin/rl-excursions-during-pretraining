@@ -541,7 +541,7 @@
     overflow-wrap: anywhere;
     word-break: break-word;
     color: #6b7280;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.6;
     text-decoration: none;
     margin: 6px 0; /* fixed spacing between all items */

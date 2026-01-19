@@ -68,6 +68,7 @@ body {
   @apply /* antialiased */
   py-12 sm:py-24 md:py-32 text-neutral-700;
   font-family: "Iowan Old Style BT", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  font-size: 17.7px;
   line-height: 1.7;
   letter-spacing: 0.025em;
 }
