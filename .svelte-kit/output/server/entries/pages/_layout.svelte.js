@@ -51,7 +51,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.data === void 0 && $$bindings.data && data !== void 0)
     $$bindings.data(data);
   $$result.css.add(css);
-  return `${$$result.head += `<!-- HEAD_svelte-1r9of7h_START --><!-- HEAD_svelte-1r9of7h_END -->`, ""} <div class="page-upper-right-inline svelte-pbnrg0" data-svelte-h="svelte-1cbujm3"><img src="/assets/figures/upper_right2.png" alt="Institution logos" class="page-upper-right svelte-pbnrg0" loading="lazy" decoding="async"></div> ${validate_component(Header, "Header").$$render($$result, {}, {}, {})} ${`<main>${slots.default ? slots.default({}) : ``}</main>`} `;
+  return `${$$result.head += `<!-- HEAD_svelte-1r9of7h_START --><!-- HEAD_svelte-1r9of7h_END -->`, ""} <div class="page-upper-right-inline svelte-pbnrg0" data-svelte-h="svelte-1nuwv2k"><img src="/assets/figures/upper_right_final.png" alt="Institution logos" class="page-upper-right svelte-pbnrg0" loading="lazy" decoding="async"></div> ${validate_component(Header, "Header").$$render($$result, {}, {}, {})} ${`<main>${slots.default ? slots.default({}) : ``}</main>`} `;
 });
 export {
   Layout as default

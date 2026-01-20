@@ -59,7 +59,7 @@
 
 <div class="page-upper-right-inline">
   <img
-    src="/assets/figures/upper_right2.png"
+    src="/assets/figures/upper_right_final.png"
     alt="Institution logos"
     class="page-upper-right"
     loading="lazy"
