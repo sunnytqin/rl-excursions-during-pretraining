@@ -43,7 +43,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}` : `${escape($page.data.header?.affiliations ?? "__AFFILIATIONS__")}`}</div> <div class="date svelte-1u6s84r">${escape($page.data.header?.date ?? "__DATE__")}</div></div></div> </header>`;
 });
 const css = {
-  code: ".page-upper-right-inline.svelte-m7b9f7{position:absolute;top:6px;right:26px;display:flex;justify-content:flex-end;pointer-events:none}.page-upper-right.svelte-m7b9f7{width:clamp(140px, 16vw, 240px);height:auto;pointer-events:none}@media(max-width: 720px){.page-upper-right-inline.svelte-m7b9f7{top:4px;right:4px}.page-upper-right.svelte-m7b9f7{width:clamp(110px, 28vw, 180px)}}",
+  code: ".page-upper-right-inline.svelte-pbnrg0{position:absolute;top:3px;right:16px;display:flex;justify-content:flex-end;pointer-events:none}.page-upper-right.svelte-pbnrg0{width:clamp(220px, 18vw, 320px);height:auto;pointer-events:none}@media(max-width: 720px){.page-upper-right-inline.svelte-pbnrg0{top:4px;right:4px}.page-upper-right.svelte-pbnrg0{width:clamp(140px, 30vw, 220px)}}",
   map: null
 };
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -51,7 +51,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.data === void 0 && $$bindings.data && data !== void 0)
     $$bindings.data(data);
   $$result.css.add(css);
-  return `${$$result.head += `<!-- HEAD_svelte-1r9of7h_START --><!-- HEAD_svelte-1r9of7h_END -->`, ""} <div class="page-upper-right-inline svelte-m7b9f7" data-svelte-h="svelte-1cbujm3"><img src="/assets/figures/upper_right2.png" alt="Institution logos" class="page-upper-right svelte-m7b9f7" loading="lazy" decoding="async"></div> ${validate_component(Header, "Header").$$render($$result, {}, {}, {})} ${`<main>${slots.default ? slots.default({}) : ``}</main>`} `;
+  return `${$$result.head += `<!-- HEAD_svelte-1r9of7h_START --><!-- HEAD_svelte-1r9of7h_END -->`, ""} <div class="page-upper-right-inline svelte-pbnrg0" data-svelte-h="svelte-1cbujm3"><img src="/assets/figures/upper_right2.png" alt="Institution logos" class="page-upper-right svelte-pbnrg0" loading="lazy" decoding="async"></div> ${validate_component(Header, "Header").$$render($$result, {}, {}, {})} ${`<main>${slots.default ? slots.default({}) : ``}</main>`} `;
 });
 export {
   Layout as default

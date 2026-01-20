@@ -93,15 +93,15 @@
 <style lang="postcss">
   .page-upper-right-inline {
     position: absolute;
-    top: 6px;
-    right: 26px;
+    top: 3px;
+    right: 16px;
     display: flex;
     justify-content: flex-end;
     pointer-events: none;
   }
 
   .page-upper-right {
-    width: clamp(140px, 16vw, 240px);
+    width: clamp(220px, 18vw, 320px);
     height: auto;
     pointer-events: none;
   }
@@ -113,7 +113,7 @@
     }
 
     .page-upper-right {
-      width: clamp(110px, 28vw, 180px);
+      width: clamp(140px, 30vw, 220px);
     }
   }
 </style>
