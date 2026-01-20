@@ -7,6 +7,7 @@
     cmu: { src: "/assets/figures/cmu.png", alt: "Carnegie Mellon University" },
   };
 
+  const internshipLine = "Work done during internship at MBZUAI-IFM";
   const affiliationLogoMap: Record<string, { src: string; alt: string }> = {
     "UC San Diego": logoMap.ucsd,
     "MBZUAI-IFM": logoMap.mbzuai,
@@ -22,6 +23,9 @@
   $: authorList = Array.isArray(authorData) && authorData.every(isAuthorEntry)
     ? (authorData as AuthorEntry[])
     : null;
+
+  const stripEqualStar = (name: string) => name.replace(/\*+$/, "").trim();
+  const hasEqualStar = (name: string) => /\*$/.test(name);
 </script>
 
 <header
@@ -40,7 +44,7 @@
         {#if authorList}
           {#each authorList as author, i (i)}
             <span class="author">
-              <span class="author-name">{author.name}</span>
+              <span class="author-name">{stripEqualStar(author.name)}</span>
               {#if author.affils}
                 <sup class="affil-sup">
                   {#each author.affils as key, j (j)}
@@ -49,14 +53,19 @@
                         src={logoMap[key].src}
                         alt={logoMap[key].alt}
                         title={logoMap[key].alt}
-                      class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""}`}
+                        class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""}`}
                         loading="lazy"
                         decoding="async"
                       />
+                    {:else if key === "intern"}
+                      <span class="affil-dot" title={internshipLine} aria-label={internshipLine}></span>
                     {:else}
                       <span class="affil-fallback">{key}</span>
                     {/if}
                   {/each}
+                  {#if hasEqualStar(author.name)}
+                    <span class="affil-sup-text">*</span>
+                  {/if}
                 </sup>
               {/if}
             </span>
@@ -68,21 +77,28 @@
 
       <div class="affiliations">
         {#if Array.isArray($page.data.header?.affiliations)}
-          {#each $page.data.header.affiliations as line, i (i)}
-            <div class="affiliation-line">
-              {#if affiliationLogoMap[line]}
-                <img
-                  src={affiliationLogoMap[line].src}
-                  alt={affiliationLogoMap[line].alt}
-                  title={affiliationLogoMap[line].alt}
-                  class="affil-logo affil-logo--legend"
-                  loading="lazy"
-                  decoding="async"
-                />
+          <div class="affiliation-line">
+            {#each $page.data.header.affiliations as line, i (i)}
+              <span class="affiliation-item">
+                {#if line === internshipLine}
+                  <span class="affil-dot" aria-hidden="true"></span>
+                {:else if affiliationLogoMap[line]}
+                  <img
+                    src={affiliationLogoMap[line].src}
+                    alt={affiliationLogoMap[line].alt}
+                    title={affiliationLogoMap[line].alt}
+                    class="affil-logo affil-logo--legend"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                {/if}
+                <span>{line}</span>
+              </span>
+              {#if i < $page.data.header.affiliations.length - 1}
+                <span class="affiliation-sep">, </span>
               {/if}
-              <span>{line}</span>
-            </div>
-          {/each}
+            {/each}
+          </div>
         {:else}
           {$page.data.header?.affiliations ?? "__AFFILIATIONS__"}
         {/if}
@@ -137,10 +153,25 @@
     align-items: flex-start;
     gap: 0px;
     margin-left: 0px;
+    transform: translateY(0px);
   }
 
   .affil-sup .affil-logo {
     margin-left: 0px;
+  }
+
+  .affil-sup-text {
+    font-size: 15px;
+    line-height: 1;
+    margin-left: 0px;
+    white-space: nowrap;
+    position: relative;
+    top: 8px;
+  }
+  .affil-sup .affil-dot {
+    position: relative;
+    margin-left: 0px;
+    top: 8px;
   }
 
   .affil-logo {
@@ -163,6 +194,23 @@
     margin-right: 8px;
   }
 
+  .affil-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    border: 1.5px solid #111827;
+    background: transparent;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 2px;
+    margin-right: 4px;
+  }
+
+  .affiliation-line .affil-dot {
+    position: relative;
+    top: -6px;
+  }
+
   .affil-fallback {
     font-size: 12px;
     color: #6b7280;
@@ -182,6 +230,16 @@
     gap: 4px;
     justify-content: center;
     width: 100%;
+  }
+
+  .affiliation-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .affiliation-sep {
+    margin: 0 4px;
   }
 
   .affiliation-line {

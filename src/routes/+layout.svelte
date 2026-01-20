@@ -24,7 +24,7 @@
   import { onMount } from 'svelte';
   import { afterNavigate } from '$app/navigation';
 
-  const MEASUREMENT_ID = 'G-ZSV2YDNY0W';
+  const MEASUREMENT_ID = 'G-Z1XRQ6ZG3X';
 
   function send_pageview(loc: Location) {
     if (!window.gtag) return;
@@ -40,6 +40,18 @@
 </script>
 
 <svelte:head>
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-Z1XRQ6ZG3X"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-Z1XRQ6ZG3X", { send_page_view: false });
+  </script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <!-- {#if !dev}
     <script

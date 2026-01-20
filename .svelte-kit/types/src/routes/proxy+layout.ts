@@ -12,11 +12,11 @@ export const load = async ({ url }: Parameters<LayoutLoad>[0]) => {
         "IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs",
       // Edit these three fields to update the header author block.
       authors: [
-        { name: "Zhoujun Cheng*", affils: ["ucsd", "mbzuai"] },
+        { name: "Zhoujun Cheng*", affils: ["ucsd", "mbzuai", "intern"] },
         { name: "Yutao Xie*", affils: ["ucsd"] },
         { name: "Yuxiao Qu*", affils: ["cmu"] },
         { name: "Amrith Setlur*", affils: ["cmu"] },
-        { name: "Shibo Hao", affils: ["ucsd", "mbzuai"] },
+        { name: "Shibo Hao", affils: ["ucsd", "mbzuai", "intern"] },
         { name: "Varad Pimpalkhute", affils: ["mbzuai"] },
         { name: "Tongtong Liang", affils: ["ucsd"] },
         { name: "Feng Yao", affils: ["ucsd"] },
@@ -32,7 +32,8 @@ export const load = async ({ url }: Parameters<LayoutLoad>[0]) => {
         // "UC San Diego",
         // "MBZUAI-IFM",
         // "Carnegie Mellon University",
-        "* equal contribution",
+        "* Equal contribution",
+        "Work done during internship at MBZUAI-IFM",
       ],
       date: " ",
     },

@@ -21,12 +21,12 @@
   }
 
   :global(.foldbox--boxed) {
-    @apply rounded border border-neutral-200 bg-white;
+    @apply rounded border border-neutral-200 bg-neutral-50;
   }
 
   :global(.foldbox__summary) {
     @apply cursor-pointer select-none font-semibold text-neutral-900;
-    @apply flex items-center gap-3;
+    @apply flex items-center gap-3 text-sm;
   }
 
   :global(.foldbox--boxed > .foldbox__summary) {
@@ -34,7 +34,7 @@
   }
 
   :global(.foldbox--boxed > .foldbox__summary:hover) {
-    @apply bg-neutral-50;
+    @apply bg-neutral-100;
   }
 
   :global(details.foldbox > summary::-webkit-details-marker) {
@@ -55,6 +55,14 @@
   }
 
   :global(details.foldbox[open] .foldbox__caret) {
+    transform: rotate(90deg);
+  }
+
+  :global(details.foldbox.foldbox--boxed > summary .foldbox__caret) {
+    transform: rotate(0deg);
+  }
+
+  :global(details.foldbox.foldbox--boxed[open] > summary .foldbox__caret) {
     transform: rotate(90deg);
   }
 

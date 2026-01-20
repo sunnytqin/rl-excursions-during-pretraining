@@ -29,8 +29,8 @@
       label: "Warning",
     },
     takeaway: {
-      wrap: "bg-slate-50 hover:bg-sky-50/50 border-sky-700",
-      badge: "text-sky-700",
+      wrap: "bg-[#EFE6DC] hover:bg-[#E4D6C7] border-[#5A3E33]",
+      badge: "text-[#5A3E33]",
       label: "Takeaways",
     },
   };
