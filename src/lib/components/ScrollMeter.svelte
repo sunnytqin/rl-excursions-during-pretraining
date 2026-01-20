@@ -38,6 +38,11 @@
   let lastWatchVw = -1;
   let hideByWidth = false;
   let scrollRaf: number | null = null;
+  // Cache TOC geometry so we can update only its left position on scroll (cheap),
+  // which matters when the page can horizontally scroll under zoom.
+  let lastTocWidth = 280;
+  let lastTocGap = 32;
+  let lastTocMinLeft = 16;
 
   function onTocWheel(e: WheelEvent) {
     if (!meterEl) return;
@@ -58,6 +63,13 @@
     if (!browser) return;
     const root = document.documentElement;
     root.style.setProperty("--toc-max-width-cap", `${tocMaxWidthCap}`);
+  }
+
+  function publishMainColWidthPx(px: number) {
+    if (!browser) return;
+    const root = document.documentElement;
+    const v = `${Math.max(0, Math.round(px))}px`;
+    root.style.setProperty("--md-main-col", v);
   }
 
   function publishSideCols(side: "on" | "off") {
@@ -237,15 +249,17 @@
     const vw = root?.clientWidth || window.innerWidth || 0;
     const hasHScroll = canHorizontallyScrollPage();
 
-    // Hide if: (no horizontal scroll AND main text occupies >= 1/2 of viewport).
+    // Hide if: (no horizontal scroll AND main text occupies "too much" of viewport).
     // Add hysteresis to prevent flicker when layout fluctuates near the threshold.
-    const RATIO_HIDE = 1 / 2;
-    const RATIO_SHOW = 0.5; // must be < RATIO_HIDE
+    // Tweak: keep TOC visible under more zoom by hiding only when the main column
+    // is a larger fraction of the viewport.
+    const RATIO_HIDE = 0.615;
+    const RATIO_SHOW = 0.61; // must be < RATIO_HIDE
 
     if (hasHScroll || vw <= 0) {
       hideByWidth = false;
     } else {
-      const MAIN_MAX_PX = 800; // keep in sync with Markdown main column max
+      const MAIN_MAX_PX = 760; // keep in sync with app.css .layout-md
       // Important: use the intended main-column width (not measured width) to avoid
       // a feedback loop where hiding side cols changes the measured width, causing
       // flicker during zoom.
@@ -331,6 +345,7 @@
     scrollRaf = requestAnimationFrame(() => {
       scrollRaf = null;
       update_progress();
+      updateTocLeftOnly();
     });
   }
 
@@ -372,10 +387,28 @@
     const maxWidth = available > 0 ? Math.min(contentWidth, available) : contentWidth;
     meterEl.style.setProperty("--toc-max-width", `${Math.min(maxWidth, cap)}px`);
 
-    // Position the TOC so it "hugs" the main text: place it to the left of the main
-    // text column with a small gap.
-    const left = Math.max(minLeft, Math.round(rect.left - maxWidth - gap));
-    meterEl.style.setProperty("--toc-left", `${left}px`);
+    // Keep TOC pinned to the left edge (no "hugging" movement).
+    meterEl.style.setProperty("--toc-left", `${minLeft}px`);
+
+    // Cache for scroll-time updates.
+    lastTocWidth = Math.min(maxWidth, cap);
+    lastTocGap = gap;
+    lastTocMinLeft = minLeft;
+
+    // Dynamically shrink the main column under zoom / tight viewports so it never
+    // needs to slide under the fixed-left TOC.
+    // Reserve: tocLeft + tocWidth + gap + a small safety gutter.
+    const vw = document.documentElement.clientWidth || window.innerWidth || 0;
+    const reserveLeft = minLeft + lastTocWidth + gap + 12;
+    const baseMain = 760; // desired max width (keep in sync with app.css/layout-md)
+    const computed = vw > 0 ? Math.min(baseMain, Math.max(520, vw - reserveLeft)) : baseMain;
+    publishMainColWidthPx(computed);
+  }
+
+  function updateTocLeftOnly() {
+    // No-op-ish now that TOC is pinned left; keep just in case vars change.
+    if (!meterEl || !container_el) return;
+    meterEl.style.setProperty("--toc-left", `${lastTocMinLeft}px`);
   }
 
   let onScroll: () => void;
@@ -510,11 +543,12 @@
   .toc {
     position: fixed;
     left: var(--toc-left, 28px);
-    top: 50%;
-    transform: translateY(-50%);
+    top: 24px;
+    bottom: 24px;
+    transform: none;
     width: var(--toc-max-width, 280px);
-    height: calc(100vh - 180px);
-    max-height: calc(100vh - 180px);
+    height: auto;
+    max-height: none;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;

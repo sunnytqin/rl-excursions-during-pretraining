@@ -108,12 +108,29 @@
       }
       // Normal image rendering
       const id = text ? `fig-${slugify(text)}` : "";
-      let out = `<img src="${href}" alt="${text || ''}" ${id ? `id="${id}" ` : ""}class="block mx-auto" `;
-      if (title) out += `title="${title}" `;
-      out += '/>';
+      let out = `<img src="${href}" alt="${text || ''}" ${id ? `id="${id}" ` : ""}class="block mx-auto unselectable" />`;
+
+      // Render caption from image title (match imageAttrExtension behavior)
+      if (title) {
+        const m = /\bFigure\s+(\d+)\b/i.exec(String(title || ""));
+        const figNumAttr = m ? ` data-fig-num="${m[1]}"` : "";
+        const cap = boldFigurePrefix(String(title || ""));
+        out += `<div class='md-figcaption text-left text-gray-500 mb-4 md:px-8 lg:px-12 text-sm'${figNumAttr}>${marked.parse(cap, { smartypants: true })}</div>`;
+      }
       return out;
     },
   };
+
+  function boldFigurePrefix(rawTitle: string) {
+    const s = String(rawTitle || "").trim();
+    // Avoid double-bold if already styled.
+    if (/^(?:\*\*|<strong>|\s*<b>)/i.test(s)) return s;
+    // Bold leading "Figure 12:", "Figure 12.", "Figure 12(a):", etc.
+    return s.replace(
+      /^(Figure\s+\d+(?:\([a-z]\))?\s*(?:[:.]))(\s*)/i,
+      "**$1**$2",
+    );
+  }
 
   function slugify(s: string) {
     return String(s || '')
@@ -207,7 +224,8 @@
       if (token.title) {
         const m = /\bFigure\s+(\d+)\b/i.exec(String(token.title || ""));
         const figNumAttr = m ? ` data-fig-num="${m[1]}"` : "";
-        out += `<div class='md-figcaption text-left text-gray-500 mb-4 md:px-8 lg:px-12 text-sm'${figNumAttr}>${marked.parse(token.title, { smartypants: true })}</div>`;
+        const cap = boldFigurePrefix(String(token.title || ""));
+        out += `<div class='md-figcaption text-left text-gray-500 mb-4 md:px-8 lg:px-12 text-sm'${figNumAttr}>${marked.parse(cap, { smartypants: true })}</div>`;
       }
       return out;
     },
@@ -1271,17 +1289,61 @@
     scroll-margin-top: 120px;
   }
 
+  /* Figure captions: small, gray, left-aligned, full width (match main text column). */
+  :global(.md-output .md-figcaption) {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    text-align: left;
+    margin-bottom: 1rem;
+    color: rgb(107 114 128); /* gray-500 */
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.25rem;
+    /* Override legacy padding classes in the generated HTML. */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* 2x2 figure grid (used in some markdown sections) */
+  :global(.md-output .md-figgrid-2x2) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
+    align-items: start;
+    margin: 0 0 1rem 0;
+  }
+  @media (max-width: 800px) {
+    :global(.md-output .md-figgrid-2x2) {
+      grid-template-columns: 1fr;
+    }
+  }
+  :global(.md-output .md-figgrid-2x2 figure) {
+    margin: 0;
+  }
+  :global(.md-output .md-figgrid-2x2 img) {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.25rem;
+  }
+  :global(.md-output .md-figgrid-2x2 figcaption) {
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(107 114 128); /* gray-500 */
+  }
+
   :global(.md-output h1) {
     @apply text-3xl font-bold mt-6 mb-4;
   }
   :global(.md-output h2) {
-    @apply text-2xl font-semibold mt-5 mb-3;
+    @apply text-[1.1rem] font-semibold mt-5 mb-3;
   }
   :global(.md-output h3) {
-    @apply text-xl font-semibold mt-4 mb-2;
+    @apply text-lg font-semibold mt-4 mb-2;
   }
   :global(.md-output h4) {
-    @apply text-lg font-semibold mt-3 mb-2;
+    @apply text-base font-semibold mt-3 mb-2;
   }
 
   :global(.md-output p) {
@@ -1310,6 +1372,30 @@
 
   :global(.md-output li) {
     @apply mb-1;
+  }
+
+  /* Tables (Markdown) */
+  :global(.md-output table) {
+    @apply w-full text-[95%] mb-4;
+    border-collapse: collapse;
+    display: block; /* enable horizontal scrolling on narrow viewports */
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  :global(.md-output thead) {
+    @apply bg-neutral-50;
+  }
+  :global(.md-output th),
+  :global(.md-output td) {
+    @apply align-top px-3 py-2;
+    border: 1px solid rgb(229 231 235); /* neutral-200 */
+  }
+  :global(.md-output th) {
+    @apply text-left font-semibold text-neutral-800;
+    white-space: nowrap;
+  }
+  :global(.md-output tbody tr:nth-child(even)) {
+    @apply bg-neutral-50/50;
   }
 
   :global(.math-block) {
@@ -1420,9 +1506,9 @@
   /* Small-section overrides: drop each heading one step inside .sm-block */
   /* :global(.sm-block) { font-size: 0.875rem; } */
   :global(.sm-block h1) { @apply text-2xl font-bold mt-6 mb-4; }
-  :global(.sm-block h2) { @apply text-xl font-semibold mt-5 mb-3; }
-  :global(.sm-block h3) { @apply text-lg font-semibold mt-4 mb-2; }
-  :global(.sm-block h4) { @apply text-base font-semibold mt-3 mb-2; }
+  :global(.sm-block h2) { @apply text-base font-semibold mt-5 mb-3; }
+  :global(.sm-block h3) { @apply text-sm font-semibold mt-4 mb-2; }
+  :global(.sm-block h4) { @apply text-xs font-semibold mt-3 mb-2; }
   /* Make inline code a touch smaller relative to the smaller text size */
   :global(.sm-block code) { @apply text-[90%]; }
   /* Optional: tighten paragraphs slightly in small blocks */
@@ -1444,7 +1530,7 @@
   .md-grid {
     display: grid;
     /* 3 columns: left margin | main text | right margin (footnotes live in the right margin) */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 850px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--md-main-col, 760px)) minmax(0, 1fr);
     column-gap: var(--toc-gap, var(--side-gap, 32px));
     align-items: start;
   }
@@ -1505,8 +1591,16 @@
     margin: 0;
   }
 
+  .md-footnotes .fn-text {
+    min-width: 0; /* allow flex child to shrink so wrapping can happen */
+  }
+
   .md-footnotes .fn-text :global(a) {
     @apply underline underline-offset-[3px] decoration-neutral-400;
+    /* Allow very long URLs to wrap nicely in the right-side footnote panel. */
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   :global(.footnote-ref) {

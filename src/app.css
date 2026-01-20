@@ -35,12 +35,12 @@
   }
 
   .layout-md {
-    @apply max-w-[900px] mx-auto px-4 sm:px-6;
+    @apply max-w-[780px] mx-auto px-4 sm:px-6;
   }
 
   /* Wider container for pages that render a right-side footnote/citation margin. */
   .layout-xl {
-    @apply max-w-[1400px] mx-auto px-4 sm:px-6;
+    @apply max-w-[1200px] mx-auto px-4 sm:px-6;
   }
 
   .heading2 {
