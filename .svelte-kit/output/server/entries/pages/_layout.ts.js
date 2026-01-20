@@ -6,14 +6,30 @@ const load = async ({ url }) => {
     header: {
       title: "IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs",
       // Edit these three fields to update the header author block.
-      authors: "Zhoujun Cheng¹²*, Yutao Xie¹*, Yuxiao Qu³*, Amrith Setlur³*, Shibo Hao¹², Varad Pimpalkhute², Tongtong Liang¹, Feng Yao¹, Hector Liu², Eric Xing², Virginia Smith³, Ruslan Salakhutdinov³, Zhiting Hu¹, Taylor Killian², Aviral Kumar³",
+      authors: [
+        { name: "Zhoujun Cheng*", affils: ["ucsd", "mbzuai"] },
+        { name: "Yutao Xie*", affils: ["ucsd"] },
+        { name: "Yuxiao Qu*", affils: ["cmu"] },
+        { name: "Amrith Setlur*", affils: ["cmu"] },
+        { name: "Shibo Hao", affils: ["ucsd", "mbzuai"] },
+        { name: "Varad Pimpalkhute", affils: ["mbzuai"] },
+        { name: "Tongtong Liang", affils: ["ucsd"] },
+        { name: "Feng Yao", affils: ["ucsd"] },
+        { name: "Hector Liu", affils: ["mbzuai"] },
+        { name: "Eric Xing", affils: ["mbzuai"] },
+        { name: "Virginia Smith", affils: ["cmu"] },
+        { name: "Ruslan Salakhutdinov", affils: ["cmu"] },
+        { name: "Zhiting Hu", affils: ["ucsd"] },
+        { name: "Taylor Killian", affils: ["mbzuai"] },
+        { name: "Aviral Kumar", affils: ["cmu"] }
+      ],
       affiliations: [
-        "¹ UC San Diego",
-        "² MBZUAI-IFM",
-        "³ Carnegie Mellon University",
+        // "UC San Diego",
+        // "MBZUAI-IFM",
+        // "Carnegie Mellon University",
         "* equal contribution"
       ],
-      date: "2026 01/19"
+      date: " "
     }
   };
 };

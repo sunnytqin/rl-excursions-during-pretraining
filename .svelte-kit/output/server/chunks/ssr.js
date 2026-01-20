@@ -30,6 +30,9 @@ function compute_rest_props(props, keys) {
       rest[k] = props[k];
   return rest;
 }
+function null_to_empty(value) {
+  return value == null ? "" : value;
+}
 let current_component;
 function set_current_component(component) {
   current_component = component;
@@ -242,12 +245,13 @@ export {
   create_ssr_component as c,
   each as d,
   escape as e,
-  compute_rest_props as f,
-  spread as g,
-  escape_object as h,
-  escape_attribute_value as i,
-  getContext as j,
-  add_attribute as k,
+  add_attribute as f,
+  null_to_empty as g,
+  compute_rest_props as h,
+  spread as i,
+  escape_object as j,
+  escape_attribute_value as k,
+  getContext as l,
   missing_component as m,
   noop as n,
   onDestroy as o,

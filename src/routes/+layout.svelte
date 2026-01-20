@@ -57,6 +57,16 @@
   {/if} -->
 </svelte:head>
 
+<div class="page-upper-right-inline">
+  <img
+    src="/assets/figures/upper_right2.png"
+    alt="Institution logos"
+    class="page-upper-right"
+    loading="lazy"
+    decoding="async"
+  />
+</div>
+
 <Header />
 
 {#if isMobile || reducedMotion}
@@ -79,3 +89,31 @@
 {/if}
 
 <!-- <Footer /> -->
+
+<style lang="postcss">
+  .page-upper-right-inline {
+    position: absolute;
+    top: 6px;
+    right: 26px;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+
+  .page-upper-right {
+    width: clamp(140px, 16vw, 240px);
+    height: auto;
+    pointer-events: none;
+  }
+
+  @media (max-width: 720px) {
+    .page-upper-right-inline {
+      top: 4px;
+      right: 4px;
+    }
+
+    .page-upper-right {
+      width: clamp(110px, 28vw, 180px);
+    }
+  }
+</style>

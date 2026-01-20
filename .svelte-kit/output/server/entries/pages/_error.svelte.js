@@ -1,4 +1,4 @@
-import { c as create_ssr_component, f as compute_rest_props, g as spread, h as escape_object, i as escape_attribute_value, d as each, v as validate_component, b as subscribe, e as escape } from "../../chunks/ssr.js";
+import { c as create_ssr_component, h as compute_rest_props, i as spread, j as escape_object, k as escape_attribute_value, d as each, v as validate_component, b as subscribe, e as escape } from "../../chunks/ssr.js";
 import { p as page } from "../../chunks/stores.js";
 const void_element_names = /^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/;
 function is_void(name) {
