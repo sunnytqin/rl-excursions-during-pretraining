@@ -49,8 +49,10 @@
             <span class="author">
               <span class="author-name">{stripEqualStar(author.name)}</span>
               {#if author.affils}
+                {@const nonHarvardAffils = author.affils.filter((a) => a !== "harvard")}
+                {#if nonHarvardAffils.length > 0 || hasEqualStar(author.name)}
                 <sup class="affil-sup">
-                  {#each author.affils as key, j (j)}
+                  {#each nonHarvardAffils as key, j (j)}
                     {#if logoMap[key]}
                       <img
                         src={base + logoMap[key].src}
@@ -70,6 +72,7 @@
                     <span class="affil-sup-text">*</span>
                   {/if}
                 </sup>
+                {/if}
               {/if}
             </span>
           {/each}
