@@ -1,9 +1,9 @@
 import { c as create_ssr_component, v as validate_component } from "../../../chunks/ssr.js";
-import { t as textRaw, S as Seo, a as ScrollMeter, M as Markdown } from "../../../chunks/rl_excursions.js";
-import { b as base } from "../../../chunks/paths.js";
+import { S as Seo, a as ScrollMeter, M as Markdown } from "../../../chunks/ScrollMeter.js";
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let text;
-  text = textRaw.replace(/src="\.\.\/assets\/figures\//g, `src="${base}/assets/figures/`);
+  let { data } = $$props;
+  if ($$props.data === void 0 && $$bindings.data && data !== void 0)
+    $$bindings.data(data);
   return `  ${validate_component(Seo, "Seo").$$render(
     $$result,
     {
@@ -12,7 +12,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     },
     {},
     {}
-  )} <div>${validate_component(ScrollMeter, "ScrollMeter").$$render($$result, { containerSelector: ".md-output" }, {}, {})} <div class="layout-xl text-base space-y-12">${validate_component(Markdown, "Markdown").$$render($$result, { source: text }, {}, {})}</div></div>`;
+  )} <div>${validate_component(ScrollMeter, "ScrollMeter").$$render($$result, { containerSelector: ".md-output" }, {}, {})} <div class="layout-xl text-base space-y-12">${validate_component(Markdown, "Markdown").$$render($$result, { source: data.text }, {}, {})}</div></div>`;
 });
 export {
   Page as default

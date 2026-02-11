@@ -3,10 +3,9 @@
   import Seo from "$lib/components/Seo.svelte";
   import Markdown from "$lib/components/Markdown.svelte";
   import ScrollMeter from "$lib/components/ScrollMeter.svelte";
-  import { base } from "$app/paths";
-  import textRaw from "../../maintext/rl_excursions.md?raw";
-  // Resolve figure paths so assets work in dev (base="") and on GitHub Pages (base="/rl-excursions-during-pretraining")
-  $: text = textRaw.replace(/src="\.\.\/assets\/figures\//g, `src="${base}/assets/figures/`);
+  import type { PageData } from "./$types";
+
+  export let data: PageData;
 </script>
 
 <Seo
@@ -18,7 +17,7 @@
   <ScrollMeter containerSelector=".md-output" />
 
   <div class="layout-xl text-base space-y-12">
-    <Markdown source={text} />
+    <Markdown source={data.text} />
   </div>
 </div>
 
