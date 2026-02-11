@@ -1,6 +1,9 @@
 import { c as create_ssr_component, v as validate_component } from "../../../chunks/ssr.js";
-import { t as text, S as Seo, a as ScrollMeter, M as Markdown } from "../../../chunks/rl_excursions.js";
+import { t as textRaw, S as Seo, a as ScrollMeter, M as Markdown } from "../../../chunks/rl_excursions.js";
+import { b as base } from "../../../chunks/paths.js";
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let text;
+  text = textRaw.replace(/src="\.\.\/assets\/figures\//g, `src="${base}/assets/figures/`);
   return `  ${validate_component(Seo, "Seo").$$render(
     $$result,
     {

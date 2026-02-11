@@ -398,7 +398,8 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_rl_excursions.js"
+      "_rl_excursions.js",
+      "_paths.js"
     ]
   }
 }
