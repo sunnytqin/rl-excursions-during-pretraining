@@ -17,7 +17,7 @@ Replace placeholder figure links in `assets/` with real images exported from the
 
 <figure>
   <img src="/assets/figures/figure_1.png" alt="Overview figure placeholder showing early RL works, expansion vs sharpening, and rollout budget tradeoffs." width="100%"/>
-  <figcaption><strong>Figure 1 (placeholder).</strong> A one-picture summary: RL works surprisingly early; RL can <em>expand</em> or <em>sharpen</em> the output distribution depending on the pipeline; rollout count trades off sample-efficiency vs FLOP-efficiency.</figcaption>
+  <figcaption><strong>Figure 1.</strong> A one-picture summary: RL works surprisingly early; RL can <em>expand</em> or <em>sharpen</em> the output distribution depending on the pipeline; rollout count trades off sample-efficiency vs FLOP-efficiency.</figcaption>
 </figure>
 
 Modern LLM training usually looks like this:
@@ -168,7 +168,7 @@ On GSM8K-style training, RL on early checkpoints produces large gains.
 
 <figure>
   <img src="/assets/figures/gsm_passatk_comparison.png" alt="Placeholder for GSM8K pass@1, pass@8, pass@32 vs pretraining tokens for base, RL-only, SFT-only, and SFT→RL." width="100%"/>
-  <figcaption><strong>Figure 2 (placeholder).</strong> GSM8K results across checkpoints. RL-only improves early and can match SFT→RL after enough pretraining.</figcaption>
+  <figcaption><strong>Figure 2.</strong> GSM8K results across checkpoints. RL-only improves early and can match SFT→RL after enough pretraining.</figcaption>
 </figure>
 
 One striking data point: **at ~4B pretraining tokens**, RL raises GSM8K **pass@1** from about **2% → 18%**.
@@ -191,7 +191,7 @@ Now for the harder benchmark.
 
 <figure>
   <img src="/assets/figures/math_passatk_comparison.png" alt="Placeholder for MATH pass@k results vs pretraining tokens. RL-only improves but lags SFT and SFT→RL." width="100%"/>
-  <figcaption><strong>Figure 3 (placeholder).</strong> MATH results. RL-only improves over the base checkpoint but doesn’t catch up to SFT or SFT→RL on this harder distribution.</figcaption>
+  <figcaption><strong>Figure 3.</strong> MATH results. RL-only improves over the base checkpoint but doesn’t catch up to SFT or SFT→RL on this harder distribution.</figcaption>
 </figure>
 
 On MATH-heavy training, RL still improves over the base model — but **does not reach** the performance of SFT or SFT→RL at later checkpoints.
@@ -229,7 +229,7 @@ When RL comes *after* SFT, we often see:
 
 <figure>
   <img src="/assets/figures/gsm8k_rl_train_dynamics_comparison.png" alt="Placeholder: training dynamics showing sharpening in SFT→RL and expansion in RL-only." width="100%"/>
-  <figcaption><strong>Figure 4 (placeholder).</strong> Training dynamics. Left: SFT→RL shows sharpening (pass@1 up, pass@32 down during RL). Right: RL-only shows expansion (both pass@1 and pass@32 up).</figcaption>
+  <figcaption><strong>Figure 4.</strong> Training dynamics. Left: SFT→RL shows sharpening (pass@1 up, pass@32 down during RL). Right: RL-only shows expansion (both pass@1 and pass@32 up).</figcaption>
 </figure>
 
 ### RL-only tends to expand (in our setting)
@@ -248,7 +248,7 @@ This is not all upside. RL-only on *very early* checkpoints is **unstable across
 
 <figure>
   <img src="/assets/figures/gsm8k_seed_rewards.png" alt="Placeholder: early checkpoint RL seed brittleness—training reward similar, but test pass@k diverges." width="100%"/>
-  <figcaption><strong>Figure 7 (placeholder).</strong> Seed brittleness at early checkpoints: training reward can look similar while test performance diverges sharply.</figcaption>
+  <figcaption><strong>Figure 7.</strong> Seed brittleness at early checkpoints: training reward can look similar while test performance diverges sharply.</figcaption>
 </figure>
 
 What this suggests is subtle but important:
@@ -288,7 +288,7 @@ and measure GSM8K test pass@k as a function of:
 
 <figure>
   <img src="/assets/figures/gsm8k_rollouts_p1-2.png" alt="Placeholder: effect of rollouts on pass@1 and pass@8 vs FLOPs and vs samples." width="100%"/>
-  <figcaption><strong>Figure 5 (placeholder).</strong> Rollout scaling trade-offs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.</figcaption>
+  <figcaption><strong>Figure 5.</strong> Rollout scaling trade-offs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.</figcaption>
 </figure>
 
 ### What we learned
@@ -367,7 +367,7 @@ These plots are useful for readers who want to sanity-check training stability a
 
 <figure>
   <img src="/assets/figures/gsm8k_rl_sft_comparison.png" alt="Placeholder: RL train/val reward and GSM8K pass@1 over RL steps for multiple pretraining checkpoints." width="100%"/>
-  <figcaption><strong>Figure 6 (placeholder).</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
+  <figcaption><strong>Figure 6.</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
 </figure>
 
 </details>
@@ -377,7 +377,7 @@ These plots are useful for readers who want to sanity-check training stability a
 
 <figure>
   <img src="/assets/figures/appx_fixB_easy.png" alt="Placeholder: SFT epoch comparison (5 vs 10 epochs) showing convergence across checkpoints on GSM8K pass@k." width="100%"/>
-  <figcaption><strong>Figure 8 (placeholder).</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
+  <figcaption><strong>Figure 8.</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
 </figure>
 
 </details>
@@ -387,7 +387,7 @@ These plots are useful for readers who want to sanity-check training stability a
 
 <figure>
   <img src="/assets/figures/gsm8k_base_eval_shots.png" alt="Placeholder: n-shot prompting ablation (0/1/8-shot) for evaluating base checkpoints on GSM8K and MATH pass@k." width="100%"/>
-  <figcaption><strong>Figure 9 (placeholder).</strong> Few-shot prompting ablation for base checkpoints: 8-shot yields the strongest evaluation performance.</figcaption>
+  <figcaption><strong>Figure 9.</strong> Few-shot prompting ablation for base checkpoints: 8-shot yields the strongest evaluation performance.</figcaption>
 </figure>
 
 </details>

@@ -13,13 +13,14 @@ export const load = async ({ url }: Parameters<LayoutLoad>[0]) => {
       // Edit authors and affiliations for your paper.
       authors: [
         { name: "Rachit Bansal*", affils: ["harvard"] },
-        { name: "Tian Qin*", affils: ["harvard"] },
+        { name: "Tian (Sunny) Qin*", affils: ["harvard"] },
         { name: "Clara Mohri*", affils: ["harvard"] },
         { name: "David Alvarez-Melis", affils: ["harvard"] },
         { name: "Sham Kakade", affils: ["harvard"] },
       ],
       affiliations: [
         "Harvard University",
+        "Kempner Institute at Harvard",
         "* Equal contribution",
       ],
       date: " ", // e.g. "2025" or "Under review"
