@@ -20,6 +20,8 @@ Replace placeholder figure links in `assets/` with real images exported from the
   <figcaption><strong>Figure 1.</strong> A one-picture summary: RL works surprisingly early; RL can <em>expand</em> or <em>sharpen</em> the output distribution depending on the pipeline; rollout count trades off sample-efficiency vs FLOP-efficiency.</figcaption>
 </figure>
 
+TEST
+
 Modern LLM training usually looks like this:
 
 > **Pretrain (next-token prediction)** → **SFT (next-token prediction)** → **RL (on-policy)**
