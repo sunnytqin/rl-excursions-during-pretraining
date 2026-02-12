@@ -37,8 +37,10 @@ Logos appear next to author names and in the affiliation line. To set them up:
    ```js
    // In logoMap:
    harvard: { src: "/assets/figures/harvard.png", alt: "Harvard University" },
+   kempner: { src: "/assets/figures/harvard.png", alt: "Kempner Institute" },
    // In affiliationLogoMap (use the exact string you put in +layout.ts):
    "Harvard University": logoMap.harvard,
+   "Kempner Institute": logoMap.kempner,
    ```
    Optional: add a class like `affil-logo--harvard` on the `<img>` and a style `.affil-logo--harvard { height: 18px; }` to tune size.
 
